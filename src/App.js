@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react'
 import './App.css';
+import Points from './Points'
 
 function App() {
+  const [info, setInfo] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+        const getData = await fetch("http://localhost:1359/api/logs");
+        const dataSet = await getData.json();
+        setInfo(dataSet);
+    })();
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="data">
+      <h1>Graphical Data Analysis Per Day Of The Week</h1>
+      <div className="App">
+      {
+        info.map(data => (
+          <div key={data._id}>
+            <Points rise={data.number} />
+            <p>{data.number}</p>
+          </div>
+        ))
+      }
     </div>
+    </div>
+    
   );
 }
 
